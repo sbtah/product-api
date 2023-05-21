@@ -25,7 +25,7 @@ class LocalStore(ScrapedObject):
         on_delete=models.CASCADE,
     )
     name = models.CharField(max_length=100, unique=True)
-    scraped_id = models.IntegerField(null=True)
+    scraped_id = models.IntegerField()
     url = models.URLField(max_length=255, blank=True)
     api_url = models.URLField(max_length=255, blank=True)
     is_active = models.BooleanField(default=False)
