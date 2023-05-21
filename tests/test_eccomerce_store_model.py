@@ -1,5 +1,5 @@
 '''
-Tests for Stores models.
+Tests for EcommerceStore model.
 '''
 import pytest
 from objects.models import stores
@@ -28,3 +28,12 @@ class TestEcommerceStoreModel:
 
         e_store = example_ecommerce_store
         assert str(e_store) == e_store.name
+
+    def test_save_method_sets_created_field(self, example_ecommerce_store):
+        '''Test save method on class.'''
+
+        e_store = example_ecommerce_store
+
+        assert e_store.created is not None
+        assert isinstance(e_store.created, int)
+        assert issubclass(stores.EcommerceStore, stores.ScrapedObject)
