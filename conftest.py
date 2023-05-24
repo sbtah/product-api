@@ -35,3 +35,13 @@ def example_category(example_ecommerce_store):
         name='Test Category',
         url = 'https://test-store/test-category'
     )
+
+@pytest.fixture
+def example_product(example_ecommerce_store):
+    '''Pytest fixture for creating example Product object.'''
+    e_store = example_ecommerce_store
+    return models.Product.objects.create(
+        parrent_store=e_store,
+        name='Test Product',
+        url = 'https://test-store/test-product'
+    )
