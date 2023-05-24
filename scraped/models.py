@@ -1,6 +1,7 @@
 import time
 
 from django.db import models
+from django.contrib.postgres.fields import ArrayField
 
 
 class ScrapedObject(models.Model):
@@ -82,10 +83,16 @@ class Category(ScrapedObject):
 class Product(ScrapedObject):
     '''Product object.'''
 
+    parrent_store = models.ForeignKey(
+        EcommerceStore,
+        on_delete=models.CASCADE,
+    )
+    parrent_categories_ids = ArrayField(
+        models.IntegerField(blank=True, null=True), blank=True, null=True
+    )
     name = models.CharField(max_length=255)
     url = models.URLField(max_length=255, unique=True, db_index=True)
     api_url = models.URLField(max_length=255, blank=True)
-
     scraped_id = models.IntegerField(blank=True, null=True)
     type_id = models.CharField(max_length=100, blank=True)
     short_description = models.TextField(blank=True)
@@ -113,10 +120,6 @@ class Product(ScrapedObject):
     conversion_unit = models.CharField(max_length=10, blank=True)
     qty_per_package = models.IntegerField(blank=True, null=True)
     tax_rate = models.CharField(max_length=10, blank=True)
-    parrent_store = models.ForeignKey(
-        EcommerceStore,
-        on_delete=models.CASCADE,
-    )
 
     def __str__(self):
         return self.name
