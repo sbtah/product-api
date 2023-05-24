@@ -6,7 +6,7 @@ pytestmark = pytest.mark.django_db
 
 
 class TestUserMode:
-    """Test cases for custom User model."""
+    '''Test cases for custom User model.'''
 
     def test_create_user(self):
         '''Test that creating user is successful.'''
