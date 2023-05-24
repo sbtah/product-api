@@ -2,7 +2,8 @@
 Tests for LocalStore model.
 '''
 import pytest
-from objects.models import stores
+from scraped.models import LocalStore
+from scraped.models import ScrapedObject
 
 
 pytestmark = pytest.mark.django_db
@@ -14,16 +15,16 @@ class TestLocalStoremodel:
     def test_create_local_store(self, example_ecommerce_store):
         '''Test creating LocalStore object is successful.'''
 
-        assert stores.LocalStore.objects.all().count() == 0
+        assert LocalStore.objects.all().count() == 0
         e_store = example_ecommerce_store
-        local_store = stores.LocalStore.objects.create(
+        local_store = LocalStore.objects.create(
             parrent_store=e_store,
             name='New York',
             scraped_id=1,
             is_active=True,
         )
-        assert stores.LocalStore.objects.all().count() == 1
-        assert isinstance(local_store, stores.LocalStore) is True
+        assert LocalStore.objects.all().count() == 1
+        assert isinstance(local_store, LocalStore) is True
 
     def test_local_store_str_method(self, example_local_store):
         '''Test that __str__ for LocalStore is properly generated.'''
@@ -38,4 +39,4 @@ class TestLocalStoremodel:
 
         assert local_store.created is not None
         assert isinstance(local_store.created, int)
-        assert issubclass(stores.EcommerceStore, stores.ScrapedObject)
+        assert issubclass(LocalStore, ScrapedObject)
