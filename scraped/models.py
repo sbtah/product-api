@@ -26,7 +26,7 @@ class EcommerceStore(ScrapedObject):
 
     name = models.CharField(max_length=100, unique=True)
     domain = models.CharField(max_length=100, unique=True)
-    discovery_url = models.URLField(max_length=100, unique=True)
+    discovery_url = models.URLField(max_length=255, unique=True)
     package_name = models.CharField(max_length=50, blank=True)
     module_name = models.CharField(max_length=50, blank=True)
     class_name = models.CharField(max_length=50, blank=True)
