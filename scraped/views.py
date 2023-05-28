@@ -51,3 +51,14 @@ class EcommerceStoreUpdateAPIView(generics.UpdateAPIView):
     permission_classes = [IsAuthenticated]
 
 ecommerce_store_update_view = EcommerceStoreUpdateAPIView.as_view()
+
+
+class EcommerceStoreDeleteAPIView(generics.DestroyAPIView):
+    '''Delete Api View for EcommerceStore.'''
+
+    queryset = EcommerceStore.objects.all()
+    serializer_class = EcommerceStoreDetailSerializer
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+ecommerce_store_delete_view = EcommerceStoreDeleteAPIView.as_view()
