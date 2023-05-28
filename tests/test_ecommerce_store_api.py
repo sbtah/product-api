@@ -24,8 +24,12 @@ def detail_url(ecommerce_store_id):
     return reverse('scraped:store-detail', args=[ecommerce_store_id])
 
 def update_url(ecommerce_store_id):
-    '''Create and returl EcommerceStore update url.'''
+    '''Create and return EcommerceStore update url.'''
     return reverse('scraped:store-update', args=[ecommerce_store_id])
+
+def delete_url(ecommerce_store_id):
+    '''Create and return EcommerceStore delete url.'''
+    return reverse('scraped:store-delete', args=[ecommerce_store_id])
 
 
 class TestPublicEcommerceStoreApi:
@@ -91,7 +95,7 @@ class TestPrivateEcommerceStoreApi:
         for k, v in payload.items():
             assert getattr(e_store, k) == v
 
-    def test_perform_partial_update(
+    def test_perform_partial_update_ecommerce_store(
             self,
             authenticated_client,
             example_ecommerce_store,
@@ -107,7 +111,7 @@ class TestPrivateEcommerceStoreApi:
         e_store.refresh_from_db()
         assert e_store.name == payload['name']
 
-    def test_perform_full_update(
+    def test_perform_full_update_ecommerce_store(
             self,
             authenticated_client,
             example_ecommerce_store,
@@ -134,3 +138,17 @@ class TestPrivateEcommerceStoreApi:
         e_store.refresh_from_db()
         for k, v in payload.items():
             assert getattr(e_store, k) == v
+
+    def test_delete_ecommerce_store(
+        self,
+        authenticated_client,
+        example_ecommerce_store,
+    ):
+        """Test deleting EcommerceStore successful."""
+
+        e_store = example_ecommerce_store
+        url = delete_url(e_store.id)
+        res = authenticated_client.delete(url)
+
+        assert res.status_code == status.HTTP_204_NO_CONTENT
+        assert EcommerceStore.objects.filter(id=e_store.id).exists() is False
