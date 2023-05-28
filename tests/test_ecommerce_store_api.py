@@ -23,7 +23,7 @@ def detail_url(ecommerce_store_id):
     '''Create and return EcommerceStore detail url.'''
     return reverse('scraped:store-detail', args=[ecommerce_store_id])
 
-def create_url(ecommerce_store_id):
+def update_url(ecommerce_store_id):
     '''Create and returl EcommerceStore update url.'''
     return reverse('scraped:store-update', args=[ecommerce_store_id])
 
@@ -55,7 +55,7 @@ class TestPrivateEcommerceStoreApi:
         for _ in range(3):
             example_ecommerce_store
         res = authenticated_client.get(ECOMMERCE_STORES_URL)
-        recipes = EcommerceStore.objects.all().order_by("-id")
+        recipes = EcommerceStore.objects.all().order_by('-id')
         serializer = EcommerceStoreSerializer(recipes, many=True)
 
         assert res.status_code == status.HTTP_200_OK
@@ -99,10 +99,38 @@ class TestPrivateEcommerceStoreApi:
         '''Test partial update on EcommerceStore.'''
 
         e_store = example_ecommerce_store
-        payload = {"name": "New Store Name"}
-        url = create_url(e_store.id)
+        payload = {'name': 'New Store Name'}
+        url = update_url(e_store.id)
         res = authenticated_client.patch(url, payload)
 
         assert res.status_code == status.HTTP_200_OK
         e_store.refresh_from_db()
-        assert e_store.name == payload["name"]
+        assert e_store.name == payload['name']
+
+    def test_perform_full_update(
+            self,
+            authenticated_client,
+            example_ecommerce_store,
+        ):
+        '''Test full update on EcommerceStore.'''
+
+        e_store = example_ecommerce_store
+        payload = {
+            'name': 'This is New Name',
+            'domain': 'this-is-new.com',
+            'discovery_url': 'https://this-is-new.com/',
+            'package_name': 'this_new',
+            'module_name': 'this_new',
+            'class_name': 'ThisNew',
+            'last_scrape_start': 1,
+            'last_scrape_end': 2,
+            'is_active': False,
+            'is_monitored': False,
+        }
+        url = update_url(e_store.id)
+        res = authenticated_client.put(url, payload)
+
+        assert res.status_code == status.HTTP_200_OK
+        e_store.refresh_from_db()
+        for k, v in payload.items():
+            assert getattr(e_store, k) == v
