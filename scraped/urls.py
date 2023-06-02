@@ -12,14 +12,14 @@ urlpatterns = [
         name="store-list",
     ),
     path(
-        'create/',
-        views.ecommerce_store_create_view,
-        name="store-create",
-    ),
-    path(
         'stores/<int:pk>/',
         views.ecommerce_store_detail_view,
         name='store-detail',
+    ),
+    path(
+        'stores/create/',
+        views.ecommerce_store_create_view,
+        name="store-create",
     ),
     path(
         'stores/<int:pk>/update/',
@@ -42,5 +42,10 @@ urlpatterns = [
         'local-stores/',
         views.local_store_list_view,
         name='local-store-list'
+    ),
+    path(
+        'local-stores/<int:pk>/',
+        views.local_store_detail_view,
+        name='local-store-detail',
     ),
 ]
