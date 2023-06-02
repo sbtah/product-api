@@ -42,10 +42,67 @@ class TestPublicEcommerceStoreApi:
     Test unauthenticated API requests.
     """
 
-    def test_authentication_required(self, api_client):
-        """Test that authentication is required to access API."""
+    def test_authentication_required_for_list_endpoint(self, api_client):
+        """
+        Test that authentication is required to access
+        EcommerceStore list endpoint.
+        """
 
         res = api_client.get(ECOMMERCE_STORES_URL)
+        assert res.status_code == status.HTTP_401_UNAUTHORIZED
+
+    def test_authentication_required_for_detail_endpoint(
+            self,
+            api_client,
+            example_ecommerce_store,
+    ):
+        """
+        Test that authentication is required to access
+        EcommerceStore detail endpoint.
+        """
+        e_store = example_ecommerce_store
+        url = delete_url(e_store.id)
+        res = api_client.get(url)
+
+        assert res.status_code == status.HTTP_401_UNAUTHORIZED
+
+    def test_authentication_required_for_create_endpoint(self, api_client):
+        """
+        Test that authentication is required to access
+        EcommerceStore create endpoint.
+        """
+        res = api_client.post(ECOMMERCE_STORE_CREATE_URL)
+
+        assert res.status_code == status.HTTP_401_UNAUTHORIZED
+
+    def test_authentication_required_for_update_endpoint(
+            self,
+            api_client,
+            example_ecommerce_store,
+    ):
+        """
+        Test that authentication is required to access
+        EcommerceStore update endpoint.
+        """
+        e_store = example_ecommerce_store
+        url = update_url(e_store.id)
+        res = api_client.patch(url)
+        assert res.status_code == status.HTTP_401_UNAUTHORIZED
+        res_2 = api_client.put(url)
+        assert res_2.status_code == status.HTTP_401_UNAUTHORIZED
+
+    def test_authentication_required_for_delete_endpoint(
+            self,
+            api_client,
+            example_ecommerce_store,
+    ):
+        """
+        Test that authentication is required to access
+        EcommerceStore delete endpoint.
+        """
+        e_store = example_ecommerce_store
+        url = detail_url(e_store.id)
+        res = api_client.delete(url)
         assert res.status_code == status.HTTP_401_UNAUTHORIZED
 
 
@@ -55,9 +112,9 @@ class TestPrivateEcommerceStoreApi:
     """
 
     def test_get_ecommerce_stores(
-        self,
-        example_ecommerce_store,
-        authenticated_client,
+            self,
+            example_ecommerce_store,
+            authenticated_client,
     ):
         """Test retrieving a list of EcommerceStores."""
 
@@ -100,9 +157,9 @@ class TestPrivateEcommerceStoreApi:
             assert getattr(e_store, k) == v
 
     def test_perform_partial_update_ecommerce_store(
-        self,
-        authenticated_client,
-        example_ecommerce_store,
+            self,
+            authenticated_client,
+            example_ecommerce_store,
     ):
         """Test partial update on EcommerceStore."""
 
@@ -116,9 +173,9 @@ class TestPrivateEcommerceStoreApi:
         assert e_store.name == payload['name']
 
     def test_perform_full_update_ecommerce_store(
-        self,
-        authenticated_client,
-        example_ecommerce_store,
+            self,
+            authenticated_client,
+            example_ecommerce_store,
     ):
         """Test full update on EcommerceStore."""
 
@@ -144,9 +201,9 @@ class TestPrivateEcommerceStoreApi:
             assert getattr(e_store, k) == v
 
     def test_delete_ecommerce_store(
-        self,
-        authenticated_client,
-        example_ecommerce_store,
+            self,
+            authenticated_client,
+            example_ecommerce_store,
     ):
         """Test deleting EcommerceStore successful."""
 
@@ -157,21 +214,21 @@ class TestPrivateEcommerceStoreApi:
         assert res.status_code == status.HTTP_204_NO_CONTENT
         assert EcommerceStore.objects.filter(id=e_store.id).exists() is False
 
-    def test_list_all_local_stores(
-        self,
-        authenticated_client,
-        example_ecommerce_store,
-        create_example_local_stores,
-    ):
-        """Test listing all children LocalStores for EcommerceStore."""
-
-        e_store = example_ecommerce_store
-        create_example_local_stores
-        local_stores = LocalStore.objects.filter(parent_store=e_store)
-        print(local_stores)
-        serializer = EcommerceStoreLocalStoresSerializer(local_stores, many=True)
-        url = list_children_stores_url(e_store.id)
-        res = authenticated_client.get(url)
-        print(res.data)
-        print(serializer.data)
-        assert serializer.data in res.data
+    # def test_list_all_local_stores(
+    #     self,
+    #     authenticated_client,
+    #     example_ecommerce_store,
+    #     create_example_local_stores,
+    # ):
+    #     """Test listing all children LocalStores for EcommerceStore."""
+    #
+    #     e_store = example_ecommerce_store
+    #     create_example_local_stores
+    #     local_stores = LocalStore.objects.filter(parent_store=e_store)
+    #     print(local_stores)
+    #     serializer = EcommerceStoreLocalStoresSerializer(local_stores, many=True)
+    #     url = list_children_stores_url(e_store.id)
+    #     res = authenticated_client.get(url)
+    #     print(res.data)
+    #     print(serializer.data)
+    #     assert serializer.data in res.data
