@@ -31,4 +31,9 @@ urlpatterns = [
         views.ecommerce_store_delete_view,
         name='store-delete',
     ),
+    path(
+        'stores/<int:pk>/local-stores/',
+        views.ecommerce_store_local_stores_view,
+        name='children-stores'
+    ),
 ]

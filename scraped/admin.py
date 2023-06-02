@@ -4,7 +4,7 @@ from scraped.models import EcommerceStore, LocalStore
 
 
 class EcommerceStoreAdmin(admin.ModelAdmin):
-    '''Admin for EcommerceStore object.'''
+    """Admin for EcommerceStore object."""
 
     ordering = ['id']
     list_display = [
@@ -31,7 +31,7 @@ class EcommerceStoreAdmin(admin.ModelAdmin):
 
 
 class LocalStoreAdmin(admin.ModelAdmin):
-    '''Admin for LocalStore object.'''
+    """Admin for LocalStore object."""
 
     ordering = ['id']
     list_display = [
@@ -41,13 +41,13 @@ class LocalStoreAdmin(admin.ModelAdmin):
         'last_scrape_end',
         'is_active',
         'is_monitored',
-        'parrent_store',
+        'parent_store',
         ]
     fieldsets = (
         (
             None,
             {'fields': (
-                'parrent_store',
+                'parent_store',
                 'name',
                 'scraped_id',
                 'url',
@@ -64,7 +64,7 @@ class LocalStoreAdmin(admin.ModelAdmin):
         'created',
         'last_scrape_start',
         'last_scrape_end',
-        'parrent_store'
+        'parent_store'
         ]
 
 

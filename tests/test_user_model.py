@@ -1,3 +1,6 @@
+"""
+Tests for User model.
+"""
 import pytest
 from django.contrib.auth import get_user_model
 
@@ -6,10 +9,10 @@ pytestmark = pytest.mark.django_db
 
 
 class TestUserMode:
-    '''Test cases for custom User model.'''
+    """Test cases for custom User model."""
 
     def test_create_user(self):
-        '''Test that creating user is successful.'''
+        """Test that creating user is successful."""
 
         email = 'test@test.com'
         full_name = 'Test User'
@@ -28,7 +31,7 @@ class TestUserMode:
         assert user.is_superuser is False
 
     def test_create_superuser(self):
-        '''Test that creating superuser on system is successful.'''
+        """Test that creating superuser on system is successful."""
 
         email = 'admin@test.com'
         full_name = 'Admin User'
@@ -47,7 +50,7 @@ class TestUserMode:
         assert superuser.is_superuser is True
 
     def test_create_user_with_wrong_data(self):
-        '''Test that creating User with bad data raises an error.'''
+        """Test that creating User with bad data raises an error."""
 
         with pytest.raises(TypeError):
             get_user_model().objects.create_user()

@@ -4,7 +4,7 @@ from rest_framework import serializers
 
 
 class AuthSerializer(serializers.Serializer):
-    '''Serializer for the user auth token.'''
+    """Serializer for the user auth token."""
 
     email = serializers.EmailField()
     password = serializers.CharField(
@@ -13,7 +13,7 @@ class AuthSerializer(serializers.Serializer):
     )
 
     def validate(self, data):
-        '''Validate and authenticate the user.'''
+        """Validate and authenticate the user."""
 
         email = data.get('email')
         password = data.get('password')

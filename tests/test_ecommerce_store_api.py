@@ -1,18 +1,16 @@
-
-
-'''
+"""
 Tests for EcommerceStore related APIs
-'''
+"""
 import pytest
 from django.urls import reverse
 from rest_framework import status
 
-from scraped.models import EcommerceStore
+from scraped.models import EcommerceStore, LocalStore
 from scraped.serializers import (
     EcommerceStoreDetailSerializer,
     EcommerceStoreSerializer,
+    EcommerceStoreLocalStoresSerializer,
 )
-
 
 ECOMMERCE_STORES_URL = reverse('scraped:store-list')
 ECOMMERCE_STORE_CREATE_URL = reverse('scraped:store-create')
@@ -20,41 +18,48 @@ pytestmark = pytest.mark.django_db
 
 
 def detail_url(ecommerce_store_id):
-    '''Create and return EcommerceStore detail url.'''
+    """Create and return EcommerceStore detail url."""
     return reverse('scraped:store-detail', args=[ecommerce_store_id])
 
+
 def update_url(ecommerce_store_id):
-    '''Create and return EcommerceStore update url.'''
+    """Create and return EcommerceStore update url."""
     return reverse('scraped:store-update', args=[ecommerce_store_id])
 
+
 def delete_url(ecommerce_store_id):
-    '''Create and return EcommerceStore delete url.'''
+    """Create and return EcommerceStore delete url."""
     return reverse('scraped:store-delete', args=[ecommerce_store_id])
 
 
+def list_children_stores_url(ecommerce_store_id):
+    """Create and return EcommerceStore list all LocalStores url."""
+    return reverse('scraped:children-stores', args=[ecommerce_store_id])
+
+
 class TestPublicEcommerceStoreApi:
-    '''
+    """
     Test unauthenticated API requests.
-    '''
+    """
 
     def test_authentication_required(self, api_client):
-        '''Test that authentication is required to access API.'''
+        """Test that authentication is required to access API."""
 
         res = api_client.get(ECOMMERCE_STORES_URL)
         assert res.status_code == status.HTTP_401_UNAUTHORIZED
 
 
 class TestPrivateEcommerceStoreApi:
-    '''
+    """
     Test authenticated API requests.
-    '''
+    """
 
     def test_get_ecommerce_stores(
         self,
         example_ecommerce_store,
         authenticated_client,
     ):
-        '''Test retrieving a list of EcommerceStores.'''
+        """Test retrieving a list of EcommerceStores."""
 
         for _ in range(3):
             example_ecommerce_store
@@ -66,11 +71,11 @@ class TestPrivateEcommerceStoreApi:
         assert res.data == serializer.data
 
     def test_get_ecommerce_store(
-        self,
-        example_ecommerce_store,
-        authenticated_client,
+            self,
+            example_ecommerce_store,
+            authenticated_client,
     ):
-        '''Test get EcommerceStore detail.'''
+        """Test get EcommerceStore detail."""
 
         e_store = example_ecommerce_store
         url = detail_url(e_store.id)
@@ -80,9 +85,8 @@ class TestPrivateEcommerceStoreApi:
         assert res.status_code == status.HTTP_200_OK
         assert res.data == serializer.data
 
-
     def test_create_ecommerce_store(self, authenticated_client):
-        '''Test creating an EcommerceStore.'''
+        """Test creating an EcommerceStore."""
 
         payload = {
             'name': 'Test Store',
@@ -96,11 +100,11 @@ class TestPrivateEcommerceStoreApi:
             assert getattr(e_store, k) == v
 
     def test_perform_partial_update_ecommerce_store(
-            self,
-            authenticated_client,
-            example_ecommerce_store,
-        ):
-        '''Test partial update on EcommerceStore.'''
+        self,
+        authenticated_client,
+        example_ecommerce_store,
+    ):
+        """Test partial update on EcommerceStore."""
 
         e_store = example_ecommerce_store
         payload = {'name': 'New Store Name'}
@@ -112,11 +116,11 @@ class TestPrivateEcommerceStoreApi:
         assert e_store.name == payload['name']
 
     def test_perform_full_update_ecommerce_store(
-            self,
-            authenticated_client,
-            example_ecommerce_store,
-        ):
-        '''Test full update on EcommerceStore.'''
+        self,
+        authenticated_client,
+        example_ecommerce_store,
+    ):
+        """Test full update on EcommerceStore."""
 
         e_store = example_ecommerce_store
         payload = {
@@ -152,3 +156,22 @@ class TestPrivateEcommerceStoreApi:
 
         assert res.status_code == status.HTTP_204_NO_CONTENT
         assert EcommerceStore.objects.filter(id=e_store.id).exists() is False
+
+    def test_list_all_local_stores(
+        self,
+        authenticated_client,
+        example_ecommerce_store,
+        create_example_local_stores,
+    ):
+        """Test listing all children LocalStores for EcommerceStore."""
+
+        e_store = example_ecommerce_store
+        create_example_local_stores
+        local_stores = LocalStore.objects.filter(parent_store=e_store)
+        print(local_stores)
+        serializer = EcommerceStoreLocalStoresSerializer(local_stores, many=True)
+        url = list_children_stores_url(e_store.id)
+        res = authenticated_client.get(url)
+        print(res.data)
+        print(serializer.data)
+        assert serializer.data in res.data
