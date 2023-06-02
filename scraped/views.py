@@ -1,9 +1,11 @@
 from rest_framework import authentication, generics, mixins
-from scraped.models import EcommerceStore
+from scraped.models import EcommerceStore, LocalStore
 from scraped.serializers import (
     EcommerceStoreSerializer,
     EcommerceStoreDetailSerializer,
-    EcommerceStoreLocalStoresSerializer
+    EcommerceStoreLocalStoresSerializer,
+    LocalStoreSerializer,
+    LocalStoreDetailSerializer,
 )
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -82,3 +84,19 @@ class EcommerceStoreLocalStoresAPIView(generics.RetrieveAPIView):
 
 
 ecommerce_store_local_stores_view = EcommerceStoreLocalStoresAPIView.as_view()
+
+
+class LocalStoreListAPIView(generics.ListAPIView):
+    """List Api View for LocalStore."""
+
+    serializer_class = LocalStoreSerializer
+    queryset = LocalStore.objects.all()
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self, *args, **kwargs):
+        qs = super().get_queryset(*args, **kwargs)
+        return qs.order_by("-id")
+
+
+local_store_list_view = LocalStoreListAPIView.as_view()
