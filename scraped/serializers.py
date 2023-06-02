@@ -51,7 +51,7 @@ class LocalStoreDetailSerializer(LocalStoreSerializer):
     class Meta(LocalStoreSerializer.Meta):
         fields = LocalStoreSerializer.Meta.fields + [
             'parent_store',
-            'scraper_id',
+            'scraped_id',
             'url',
             'api_url',
             'created',
