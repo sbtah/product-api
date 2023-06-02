@@ -12,7 +12,7 @@ from scraped.serializers import (
     EcommerceStoreLocalStoresSerializer,
 )
 
-ECOMMERCE_STORES_URL = reverse('scraped:store-list')
+ECOMMERCE_STORE_LIST_URL = reverse('scraped:store-list')
 ECOMMERCE_STORE_CREATE_URL = reverse('scraped:store-create')
 pytestmark = pytest.mark.django_db
 
@@ -48,7 +48,7 @@ class TestPublicEcommerceStoreApi:
         EcommerceStore list endpoint.
         """
 
-        res = api_client.get(ECOMMERCE_STORES_URL)
+        res = api_client.get(ECOMMERCE_STORE_LIST_URL)
         assert res.status_code == status.HTTP_401_UNAUTHORIZED
 
     def test_authentication_required_for_detail_endpoint(
@@ -120,7 +120,7 @@ class TestPrivateEcommerceStoreApi:
 
         for _ in range(3):
             example_ecommerce_store
-        res = authenticated_client.get(ECOMMERCE_STORES_URL)
+        res = authenticated_client.get(ECOMMERCE_STORE_LIST_URL)
         e_stores = EcommerceStore.objects.all().order_by('-id')
         serializer = EcommerceStoreSerializer(e_stores, many=True)
 
