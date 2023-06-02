@@ -100,3 +100,15 @@ class LocalStoreListAPIView(generics.ListAPIView):
 
 
 local_store_list_view = LocalStoreListAPIView.as_view()
+
+
+class LocalStoreDetailAPIView(generics.RetrieveAPIView):
+    """Detail Api View for LocalStore."""
+
+    queryset = LocalStore.objects.all()
+    serializer_class = LocalStoreDetailSerializer
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+
+local_store_detail_view = LocalStoreDetailAPIView.as_view()
