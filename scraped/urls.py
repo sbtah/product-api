@@ -31,9 +31,16 @@ urlpatterns = [
         views.ecommerce_store_delete_view,
         name='store-delete',
     ),
+    # TODO
+    # Fix this
     path(
         'stores/<int:pk>/local-stores/',
         views.ecommerce_store_local_stores_view,
         name='children-stores'
+    ),
+    path(
+        'local-stores/',
+        views.local_store_list_view,
+        name='local-store-list'
     ),
 ]

@@ -121,8 +121,8 @@ class TestPrivateEcommerceStoreApi:
         for _ in range(3):
             example_ecommerce_store
         res = authenticated_client.get(ECOMMERCE_STORES_URL)
-        recipes = EcommerceStore.objects.all().order_by('-id')
-        serializer = EcommerceStoreSerializer(recipes, many=True)
+        e_stores = EcommerceStore.objects.all().order_by('-id')
+        serializer = EcommerceStoreSerializer(e_stores, many=True)
 
         assert res.status_code == status.HTTP_200_OK
         assert res.data == serializer.data
