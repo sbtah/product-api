@@ -112,3 +112,15 @@ class LocalStoreDetailAPIView(generics.RetrieveAPIView):
 
 
 local_store_detail_view = LocalStoreDetailAPIView.as_view()
+
+
+class LocalStoreCreateAPIView(generics.CreateAPIView):
+    """Create Api View for EcommerceStore."""
+
+    queryset = LocalStore.objects.all()
+    serializer_class = LocalStoreDetailSerializer
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+
+local_store_create_view = LocalStoreCreateAPIView.as_view()
