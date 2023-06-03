@@ -48,4 +48,9 @@ urlpatterns = [
         views.local_store_detail_view,
         name='local-store-detail',
     ),
+    path(
+        'local-stores/create/',
+        views.local_store_create_view,
+        name="local-store-create",
+    ),
 ]
