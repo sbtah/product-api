@@ -12,13 +12,18 @@ from scraped.serializers import (
 )
 
 LOCAL_STORE_LIST_URL = reverse('scraped:local-store-list')
-# LOCAL_STORE_CREATE_URL = reverse('scraped:local-store-create')
+LOCAL_STORE_CREATE_URL = reverse('scraped:local-store-create')
 pytestmark = pytest.mark.django_db
 
 
 def detail_url(local_store_id):
     """Create and return LocalStore detail url."""
     return reverse('scraped:local-store-detail', args=[local_store_id])
+
+
+def update_url(ecommerce_store_id):
+    """Create and return LocalStore update url."""
+    return reverse('scraped:local-store-update', args=[ecommerce_store_id])
 
 
 class TestPublicLocalStoreApi:
@@ -51,14 +56,14 @@ class TestPublicLocalStoreApi:
 
         assert res.status_code == status.HTTP_401_UNAUTHORIZED
 
-    # def test_authentication_required_for_create_endpoint(self, api_client):
-    #     """
-    #     Test that authentication is required to access
-    #     LocalStore create endpoint.
-    #     """
-    #
-    #     res = api_client.get(LOCAL_STORE_CREATE_URL)
-    #     assert res.status_code == status.HTTP_401_UNAUTHORIZED
+    def test_authentication_required_for_create_endpoint(self, api_client):
+        """
+        Test that authentication is required to access
+        LocalStore create endpoint.
+        """
+
+        res = api_client.get(LOCAL_STORE_CREATE_URL)
+        assert res.status_code == status.HTTP_401_UNAUTHORIZED
 
 
 class TestPrivateLocalStoreApi:
@@ -91,3 +96,25 @@ class TestPrivateLocalStoreApi:
 
         assert res.status_code == status.HTTP_200_OK
         assert res.data == serializer.data
+
+    def test_create_local_store(
+            self,
+            example_ecommerce_store,
+            authenticated_client,
+    ):
+        """Test creating a LocalStore."""
+
+        e_store = example_ecommerce_store
+        payload = {
+            'parent_store': e_store.id,
+            'name': 'New York',
+            'scraped_id': 1,
+            'is_active': True,
+        }
+        res = authenticated_client.post(LOCAL_STORE_CREATE_URL, payload)
+        assert res.status_code == status.HTTP_201_CREATED
+        local_store = LocalStore.objects.first()
+        assert local_store.name == payload['name']
+        assert local_store.scraped_id == payload['scraped_id']
+        assert local_store.is_active == payload['is_active']
+        assert local_store.parent_store == e_store
