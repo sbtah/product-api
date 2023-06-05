@@ -59,6 +59,16 @@ def example_ecommerce_store():
 
 
 @pytest.fixture
+def example_ecommerce_store_2():
+    """Pytest fixture for creating second example EcommerceStore object."""
+    return models.EcommerceStore.objects.create(
+        name='Test Store 2',
+        domain='test-store-two.com',
+        discovery_url='https://test-store-two.com/',
+    )
+
+
+@pytest.fixture
 def example_local_store(example_ecommerce_store):
     """Pytest fixture for creating example LocalSore object."""
     e_store = example_ecommerce_store
