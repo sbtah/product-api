@@ -21,9 +21,9 @@ def detail_url(local_store_id):
     return reverse('scraped:local-store-detail', args=[local_store_id])
 
 
-def update_url(ecommerce_store_id):
+def update_url(local_store_id):
     """Create and return LocalStore update url."""
-    return reverse('scraped:local-store-update', args=[ecommerce_store_id])
+    return reverse('scraped:local-store-update', args=[local_store_id])
 
 
 class TestPublicLocalStoreApi:
@@ -64,6 +64,23 @@ class TestPublicLocalStoreApi:
 
         res = api_client.get(LOCAL_STORE_CREATE_URL)
         assert res.status_code == status.HTTP_401_UNAUTHORIZED
+
+    def test_authentication_required_for_update_endpoint(
+            self,
+            api_client,
+            example_local_store,
+    ):
+        """
+        Test that authentication is required to access
+        LocalStore update endpoint.
+        """
+
+        local_store = example_local_store
+        url = update_url(local_store.id)
+        res = api_client.patch(url)
+        assert res.status_code == status.HTTP_401_UNAUTHORIZED
+        res_2 = api_client.put(url)
+        assert res_2.status_code == status.HTTP_401_UNAUTHORIZED
 
 
 class TestPrivateLocalStoreApi:
@@ -118,3 +135,59 @@ class TestPrivateLocalStoreApi:
         assert local_store.scraped_id == payload['scraped_id']
         assert local_store.is_active == payload['is_active']
         assert local_store.parent_store == e_store
+
+    def test_perform_partial_update_local_store(
+            self,
+            example_local_store,
+            authenticated_client,
+    ):
+        """Test partial update on LocalStore."""
+
+        local_store = example_local_store
+        payload = {
+            'name': 'New York Xtra'
+        }
+        url = update_url(local_store.id)
+        res = authenticated_client.patch(url, payload)
+
+        assert res.status_code == status.HTTP_200_OK
+        local_store.refresh_from_db()
+        assert local_store.name == payload['name']
+
+    def test_perform_full_update_local_store(
+            self,
+            example_local_store,
+            example_ecommerce_store_2,
+            authenticated_client,
+    ):
+        """Test full update on LocalStore."""
+
+        e_store = example_ecommerce_store_2
+        local_store = example_local_store
+        payload = {
+            "id": 1,
+            "name": "New York 315",
+            "parent_store": e_store.id,
+            "scraped_id": 222,
+            "url": "http://www.new-url.com/",
+            "api_url": "",
+            'created': 1,
+            "last_scrape_start": 0,
+            "last_scrape_end": 0,
+            "is_active": True,
+            "is_monitored": True,
+        }
+        url = update_url(local_store.id)
+        res = authenticated_client.put(url, payload)
+        assert res.status_code == status.HTTP_200_OK
+        local_store.refresh_from_db()
+        assert local_store.parent_store == e_store
+        assert local_store.name == payload['name']
+        assert local_store.scraped_id == payload['scraped_id']
+        assert local_store.url == payload['url']
+        assert local_store.api_url == payload['api_url']
+        assert local_store.created == payload['created']
+        assert local_store.last_scrape_start == payload['last_scrape_start']
+        assert local_store.last_scrape_end == payload['last_scrape_end']
+        assert local_store.is_active == payload['is_active']
+        assert local_store.is_monitored == payload['is_monitored']
