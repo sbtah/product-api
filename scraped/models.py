@@ -17,7 +17,8 @@ class ScrapedObject(models.Model):
         abstract = True
 
     def save(self, *args, **kwargs):
-        self.created = int(time.time())
+        if not self.created:
+            self.created = int(time.time())
         super().save(*args, **kwargs)
 
 
