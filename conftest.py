@@ -102,8 +102,22 @@ def example_category(example_ecommerce_store):
     return models.Category.objects.create(
         parent_store=e_store,
         name='Test Category',
-        url = 'https://test-store/test-category'
+        url='https://test-store/test-category'
     )
+
+
+@pytest.fixture
+def create_example_categories(example_ecommerce_store):
+    """Create and return list of Category objects."""
+    e_store = example_ecommerce_store
+    return [
+        models.Category.objects.create(
+            parent_store=e_store,
+            name=f'Test Category {_}',
+            scraped_id=_,
+        )
+        for _ in range(1, 4)
+    ]
 
 
 @pytest.fixture
