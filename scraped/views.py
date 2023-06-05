@@ -124,3 +124,15 @@ class LocalStoreCreateAPIView(generics.CreateAPIView):
 
 
 local_store_create_view = LocalStoreCreateAPIView.as_view()
+
+
+class LocalStoreUpdateAPIView(generics.UpdateAPIView):
+    """Update Api View for LocalStore."""
+
+    queryset = LocalStore.objects.all()
+    serializer_class = LocalStoreDetailSerializer
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+
+local_store_update_view = LocalStoreUpdateAPIView.as_view()
