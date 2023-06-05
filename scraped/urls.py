@@ -33,6 +33,7 @@ urlpatterns = [
     ),
     # TODO
     # Fix this
+    # This endpoint should provide LocalStore objects for EcommerceStore.
     path(
         'stores/<int:pk>/local-stores/',
         views.ecommerce_store_local_stores_view,
@@ -52,5 +53,10 @@ urlpatterns = [
         'local-stores/create/',
         views.local_store_create_view,
         name="local-store-create",
+    ),
+    path(
+        'local-stores/<int:pk>/update/',
+        views.local_store_update_view,
+        name='local-store-update',
     ),
 ]
