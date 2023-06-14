@@ -1,5 +1,10 @@
 from django.urls import path
-from scraped.views import ecommerce_store_views, local_store_views
+
+from scraped.views import (
+    category_views,
+    ecommerce_store_views,
+    local_store_views,
+)
 
 
 app_name = 'scraped'
@@ -51,5 +56,11 @@ urlpatterns = [
         'local-stores/<int:pk>/update/',
         local_store_views.local_store_update_view,
         name='local-store-update',
+    ),
+    # Category endpoints.
+    path(
+        'categories/',
+        category_views.category_list_view,
+        name='category-list'
     ),
 ]
