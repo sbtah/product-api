@@ -6,7 +6,10 @@ from django.urls import reverse
 from rest_framework import status
 
 from scraped.models import Category, EcommerceStore
-from scraped.serializers.category_serializers import CategoryDetailSerializer, CategorySerializer
+from scraped.serializers.category_serializers import (
+    CategoryDetailSerializer,
+    CategorySerializer,
+)
 
 
 CATEGORY_LIST_URL = reverse('scraped:category-list')
