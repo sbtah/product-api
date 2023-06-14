@@ -5,8 +5,8 @@ import pytest
 from django.urls import reverse
 from rest_framework import status
 
-from scraped.models import EcommerceStore, LocalStore
-from scraped.serializers import (
+from scraped.models import LocalStore
+from scraped.serializers.local_store_serializers import (
     LocalStoreDetailSerializer,
     LocalStoreSerializer,
 )

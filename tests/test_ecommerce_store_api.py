@@ -6,10 +6,9 @@ from django.urls import reverse
 from rest_framework import status
 
 from scraped.models import EcommerceStore, LocalStore
-from scraped.serializers import (
+from scraped.serializers.ecommerce_store_serializers import (
     EcommerceStoreDetailSerializer,
     EcommerceStoreSerializer,
-    EcommerceStoreLocalStoresSerializer,
 )
 
 ECOMMERCE_STORE_LIST_URL = reverse('scraped:store-list')
@@ -213,22 +212,3 @@ class TestPrivateEcommerceStoreApi:
 
         assert res.status_code == status.HTTP_204_NO_CONTENT
         assert EcommerceStore.objects.filter(id=e_store.id).exists() is False
-
-    # def test_list_all_local_stores(
-    #     self,
-    #     authenticated_client,
-    #     example_ecommerce_store,
-    #     create_example_local_stores,
-    # ):
-    #     """Test listing all children LocalStores for EcommerceStore."""
-    #
-    #     e_store = example_ecommerce_store
-    #     create_example_local_stores
-    #     local_stores = LocalStore.objects.filter(parent_store=e_store)
-    #     print(local_stores)
-    #     serializer = EcommerceStoreLocalStoresSerializer(local_stores, many=True)
-    #     url = list_children_stores_url(e_store.id)
-    #     res = authenticated_client.get(url)
-    #     print(res.data)
-    #     print(serializer.data)
-    #     assert serializer.data in res.data
