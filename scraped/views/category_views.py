@@ -1,8 +1,12 @@
 from rest_framework import generics
-from scraped.models import Category
-from scraped.serializers.category_serializers import CategorySerializer, CategoryDetailSerializer
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
+
+from scraped.models import Category
+from scraped.serializers.category_serializers import (
+    CategoryDetailSerializer,
+    CategorySerializer,
+)
 
 
 class CategoryListApiView(generics.ListAPIView):
