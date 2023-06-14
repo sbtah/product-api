@@ -114,6 +114,7 @@ def create_example_categories(example_ecommerce_store):
         models.Category.objects.create(
             parent_store=e_store,
             name=f'Test Category {_}',
+            url=f'https://test_category-{_}.com/',
             scraped_id=_,
         )
         for _ in range(1, 4)
