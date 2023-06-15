@@ -100,7 +100,7 @@ class TestPublicEcommerceStoreApi:
         EcommerceStore delete endpoint.
         """
         e_store = example_ecommerce_store
-        url = detail_url(e_store.id)
+        url = delete_url(e_store.id)
         res = api_client.delete(url)
         assert res.status_code == status.HTTP_401_UNAUTHORIZED
 
