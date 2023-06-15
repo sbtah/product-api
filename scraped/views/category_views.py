@@ -23,3 +23,15 @@ class CategoryListApiView(generics.ListAPIView):
 
 
 category_list_view = CategoryListApiView.as_view()
+
+
+class CategoryDetailAPIView(generics.RetrieveAPIView):
+    """Detail Api view for Category object."""
+
+    queryset = Category.objects.all()
+    serializer_class = CategoryDetailSerializer
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+
+category_detail_view = CategoryDetailAPIView.as_view()
