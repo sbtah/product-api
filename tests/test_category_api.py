@@ -17,6 +17,11 @@ CATEGORY_LIST_URL = reverse('scraped:category-list')
 pytestmark = pytest.mark.django_db
 
 
+def detail_url(category_id):
+    """Create and return Category detail url."""
+    return reverse('scraped:category-detail', args=[category_id])
+
+
 class TestPublicCategoryApi:
     """
     Test unauthenticated API requests for Category endpoints.
@@ -28,6 +33,22 @@ class TestPublicCategoryApi:
         """
 
         res = api_client.get(CATEGORY_LIST_URL)
+        assert res.status_code == status.HTTP_401_UNAUTHORIZED
+
+    def test_authentication_required_for_detail_endpoint(
+            self,
+            api_client,
+            example_category,
+    ):
+        """
+        Test that authentication is required to access
+        Category detail endpoint.
+        """
+
+        category = example_category
+        url = detail_url(category.id)
+        res = api_client.get(url)
+
         assert res.status_code == status.HTTP_401_UNAUTHORIZED
 
 
@@ -50,3 +71,16 @@ class TestPrivateCategoryApi:
 
         assert res.status_code == status.HTTP_200_OK
         assert res.data == serializer.data
+
+    def test_get_category(self, example_category, authenticated_client):
+        """Test get Category detail."""
+
+        category = example_category
+        url = detail_url(category.id)
+        res = authenticated_client.get(url)
+        serializer = CategoryDetailSerializer(category)
+
+        assert res.status_code == status.HTTP_200_OK
+        assert res.data == serializer.data
+
+
