@@ -57,6 +57,11 @@ urlpatterns = [
         local_store_views.local_store_update_view,
         name='local-store-update',
     ),
+    path(
+        'local-stores/<int:pk>/delete/',
+        local_store_views.local_store_delete_view,
+        name='local-store-delete',
+    ),
     # Category endpoints.
     path(
         'categories/',
