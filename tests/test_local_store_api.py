@@ -26,6 +26,11 @@ def update_url(local_store_id):
     return reverse('scraped:local-store-update', args=[local_store_id])
 
 
+def delete_url(local_store_id):
+    """Create and return LocalStore delete url."""
+    return reverse('scraped:local-store-delete', args=[local_store_id])
+
+
 class TestPublicLocalStoreApi:
     """
     Test unauthenticated API requests for LocalStore endpoints.
@@ -61,8 +66,8 @@ class TestPublicLocalStoreApi:
         Test that authentication is required to access
         LocalStore create endpoint.
         """
-
         res = api_client.get(LOCAL_STORE_CREATE_URL)
+
         assert res.status_code == status.HTTP_401_UNAUTHORIZED
 
     def test_authentication_required_for_update_endpoint(
@@ -74,13 +79,23 @@ class TestPublicLocalStoreApi:
         Test that authentication is required to access
         LocalStore update endpoint.
         """
-
         local_store = example_local_store
         url = update_url(local_store.id)
         res = api_client.patch(url)
         assert res.status_code == status.HTTP_401_UNAUTHORIZED
         res_2 = api_client.put(url)
         assert res_2.status_code == status.HTTP_401_UNAUTHORIZED
+
+    def test_authentication_required_for_delete_endpoint(self, api_client, example_local_store):
+        """
+        Test that authentication is required to access
+        LocalStore delete endpoint.
+        """
+        local_store = example_local_store
+        url = delete_url(local_store.id)
+        res = api_client.delete(url)
+
+        assert res.status_code == status.HTTP_401_UNAUTHORIZED
 
 
 class TestPrivateLocalStoreApi:
