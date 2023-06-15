@@ -58,3 +58,15 @@ class LocalStoreUpdateAPIView(generics.UpdateAPIView):
 
 
 local_store_update_view = LocalStoreUpdateAPIView.as_view()
+
+
+class LocalStoreDeleteAPIView(generics.DestroyAPIView):
+    """Delete Api View for LocalStore."""
+
+    queryset = LocalStore.objects.all()
+    serializer_class = LocalStoreDetailSerializer
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+
+local_store_delete_view = LocalStoreDeleteAPIView.as_view()
