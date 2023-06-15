@@ -63,4 +63,9 @@ urlpatterns = [
         category_views.category_list_view,
         name='category-list'
     ),
+    path(
+        'categories/<int:pk>/',
+        category_views.category_detail_view,
+        name='category-detail',
+    ),
 ]
