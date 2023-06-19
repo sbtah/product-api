@@ -66,7 +66,7 @@ class TestPublicLocalStoreApi:
         Test that authentication is required to access
         LocalStore create endpoint.
         """
-        res = api_client.get(LOCAL_STORE_CREATE_URL)
+        res = api_client.post(LOCAL_STORE_CREATE_URL)
 
         assert res.status_code == status.HTTP_401_UNAUTHORIZED
 
@@ -144,8 +144,9 @@ class TestPrivateLocalStoreApi:
             'is_active': True,
         }
         res = authenticated_client.post(LOCAL_STORE_CREATE_URL, payload)
-        assert res.status_code == status.HTTP_201_CREATED
         local_store = LocalStore.objects.first()
+
+        assert res.status_code == status.HTTP_201_CREATED
         assert local_store.name == payload['name']
         assert local_store.scraped_id == payload['scraped_id']
         assert local_store.is_active == payload['is_active']
